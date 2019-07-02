@@ -28,7 +28,7 @@ def test_default_values(property_yaml_obj):
 
     prop = YamlEventProperty.from_yaml(property_yaml_obj)
 
-    assert prop.required == True
+    assert prop.required == False
     assert prop.allow_null == False
 
 def test_to_json(property_yaml_obj):

@@ -13,10 +13,10 @@ def experiments_yaml_obj():
     - name: experiment
       description: The name of the experiment
       type: string
+      required: true
     - name: variation
       description: What variation of the group (i.e. ""control"" ""experiment"")
       type: string
-      required: false
   """)
 
 @pytest.fixture

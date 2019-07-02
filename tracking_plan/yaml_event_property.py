@@ -16,7 +16,7 @@ class YamlEventProperty(object):
 
     @property
     def required(self):
-        return self._property_yaml.get('required', True)
+        return self._property_yaml.get('required', False)
 
     @property
     def allow_null(self):
