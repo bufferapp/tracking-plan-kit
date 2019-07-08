@@ -1,6 +1,9 @@
+from tracking_plan.errors import ValidationError
+
 class YamlEventProperty(object):
     def __init__(self, property_yaml):
         self._property_yaml = property_yaml
+        self.validate()
 
     @property
     def name(self):
@@ -44,3 +47,11 @@ class YamlEventProperty(object):
             output['pattern'] = self.pattern
 
         return output
+
+    def _check_if_pattern_is_valid(self):
+        if self.type != 'string' and self.pattern:
+            message = f'Property {self.name} cannot specify a pattern. It''s of type {self.type}.'
+            raise ValidationError(message)
+
+    def validate(self):
+        self._check_if_pattern_is_valid()
