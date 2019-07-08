@@ -8,6 +8,8 @@ import yaml
 
 from inflection import underscore, dasherize, camelize
 
+from tracking_plan.json_utils import parse_json_event
+
 class JsonTrackingPlan(object):
     def __init__(self, json_obj):
         self._json_obj = json_obj
@@ -64,11 +66,13 @@ class JsonTrackingPlan(object):
             yaml.dump(plan_obj, f)
 
     def _dump_event_file(self, events_dir, event_json):
-        event_labels = event_json.get('rules').get('labels')
-        event_area = event_labels.get('area')
-        event_product = event_labels.get('product')
 
-        event_name = event_json.get('name')
+        event_obj = parse_json_event(event_json)
+
+        event_area = event_obj.get('area')
+        event_product = event_obj.get('product')
+        event_name = event_obj.get('name')
+
         inflected_name = dasherize(underscore(event_name.replace(' ', '')))
         area_dir = os.path.join(events_dir, event_area)
         if event_product:
@@ -80,41 +84,6 @@ class JsonTrackingPlan(object):
             os.makedirs(event_dir)
 
         event_file = os.path.join(event_dir, f'{inflected_name}.yaml')
-
-        event_obj = {
-            'name': event_json.get('name'),
-            'description': event_json.get('description'),
-            'area': event_area
-        }
-        if event_product:
-            event_obj['product'] = event_product
-
-        properties = (event_json.get('rules')
-                      .get('properties')
-                      .get('properties')
-                      .get('properties'))
-
-        required = (event_json.get('rules')
-                    .get('properties')
-                    .get('properties')
-                    .get('required', []))
-
-        event_obj_properties = []
-        for name, prop in properties.items():
-            p_types = prop.get('type')
-            if not isinstance(p_types, (list,)):
-                p_types = [p_types] #sometimes this is not a list, just make it one
-            p = {
-                'name': name,
-                'description': prop.get('description'),
-                'type': p_types[0],
-                'allowNull': len(p_types) < 2 or p_types[1] != 'null'
-            }
-            if name in required:
-                p['required'] = True
-            event_obj_properties.append(p)
-
-        event_obj['properties'] = event_obj_properties
 
         with open(event_file, 'w') as f:
             yaml.dump(event_obj, f, sort_keys=False)
