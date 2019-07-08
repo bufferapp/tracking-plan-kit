@@ -11,6 +11,7 @@ def property_yaml_obj():
     type: string
     required: false
     allowNull: true
+    pattern: "experiment|control"
 """)
 
 def test_parsing_top_level_attrs(property_yaml_obj):
@@ -36,6 +37,7 @@ def test_to_json(property_yaml_obj):
 
     expected = {
         'description': 'What variation of the group',
+        'pattern': 'experiment|control',
         'type': [
             'string',
             'null'

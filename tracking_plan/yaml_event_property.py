@@ -22,6 +22,10 @@ class YamlEventProperty(object):
     def allow_null(self):
         return self._property_yaml.get('allowNull', False)
 
+    @property
+    def pattern(self):
+        return self._property_yaml.get('pattern')
+
     @classmethod
     def from_yaml(cls, property_yaml):
         return cls(property_yaml)
@@ -31,8 +35,12 @@ class YamlEventProperty(object):
         if self.allow_null:
             p_types.append('null')
 
-        return {
+        output = {
             'description': self.description,
             'type': p_types,
             'id': f"/properties/properties/properties/{self.name}"
         }
+        if self.pattern:
+            output['pattern'] = self.pattern
+
+        return output
