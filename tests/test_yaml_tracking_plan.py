@@ -2,6 +2,7 @@ import pytest
 import yaml
 from tracking_plan.yaml_tracking_plan import YamlTrackingPlan
 from tracking_plan.yaml_event import YamlEvent
+from tracking_plan.yaml_event_property import YamlEventProperty
 
 
 @pytest.fixture
@@ -18,6 +19,13 @@ def tracking_plan_event_yaml():
     properties: []
     """)
 
+@pytest.fixture
+def tracking_plan_trait_yaml():
+    return yaml.safe_load("""
+        name: email
+        type: string
+        """)
+
 def test_parsing_top_level_attrs(tracking_plan_yaml):
     plan = YamlTrackingPlan.from_yaml(tracking_plan_yaml)
 
@@ -29,6 +37,14 @@ def test_adding_events(tracking_plan_yaml, tracking_plan_event_yaml):
     plan.add_event(tracking_plan_event_yaml)
 
     assert len(plan.events) == 1
+
+def test_adding_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
+    plan = YamlTrackingPlan.from_yaml(tracking_plan_yaml)
+
+    plan.add_trait(tracking_plan_trait_yaml)
+
+    assert len(plan.traits) == 1
+
 
 def test_to_json_top_level_attrs(tracking_plan_yaml, tracking_plan_event_yaml):
     plan = YamlTrackingPlan(tracking_plan_yaml)
@@ -50,4 +66,15 @@ def test_to_json_events(tracking_plan_yaml, tracking_plan_event_yaml):
     actual = json_plan['rules']['events'][0]
     assert actual == expected
 
+def test_to_json_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
+    plan = YamlTrackingPlan(tracking_plan_yaml)
+    plan.add_trait(tracking_plan_trait_yaml)
 
+    json_plan = plan.to_json()
+
+    json_traits = json_plan['rules']['identify']['properties']['traits']['properties']
+
+    assert len(json_traits) == 1
+    expected = YamlEventProperty(tracking_plan_trait_yaml).to_json()
+    actual = json_traits['email']
+    assert actual == expected
