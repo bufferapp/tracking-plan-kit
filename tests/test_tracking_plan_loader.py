@@ -78,6 +78,6 @@ def test_loader_identify(tmpdir):
   _create_identify_file(tmpdir)
 
   loader = PlanLoader(tmpdir)
-  traits = loader.plan.traits
+  traits = loader.plan.identify_traits
 
   assert len(traits) == 2

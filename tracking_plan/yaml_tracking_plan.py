@@ -5,7 +5,7 @@ class YamlTrackingPlan(object):
     def __init__(self, plan_yaml):
         self._plan_yaml = plan_yaml
         self._events = []
-        self._traits = []
+        self._identify_traits = []
 
     @classmethod
     def from_yaml(cls, plan_yaml):
@@ -25,16 +25,16 @@ class YamlTrackingPlan(object):
         return self._events
 
     @property
-    def traits(self):
-        return self._traits
+    def identify_traits(self):
+        return self._identify_traits
 
     def add_event(self, event_yaml):
         event = YamlEvent(event_yaml)
         self._events.append(event)
 
-    def add_trait(self, trait_yaml):
+    def add_identify_trait(self, trait_yaml):
         trait_property = YamlProperty(trait_yaml)
-        self._traits.append(trait_property)
+        self._identify_traits.append(trait_property)
 
     def to_json(self):
         json_obj = {
@@ -50,8 +50,8 @@ class YamlTrackingPlan(object):
         for event in self._events:
             json_obj['rules']['events'].append(event.to_json())
 
-        if len(self.traits) > 0:
-            trait_properties = {t.name: t.to_json() for t in self._traits}
+        if len(self.identify_traits) > 0:
+            trait_properties = {t.name: t.to_json() for t in self.identify_traits}
             json_obj['rules']['identify'] = {
                 'properties' : {
                     'traits' : {

@@ -38,12 +38,12 @@ def test_adding_events(tracking_plan_yaml, tracking_plan_event_yaml):
 
     assert len(plan.events) == 1
 
-def test_adding_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
+def test_adding_identify_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
     plan = YamlTrackingPlan.from_yaml(tracking_plan_yaml)
 
-    plan.add_trait(tracking_plan_trait_yaml)
+    plan.add_identify_trait(tracking_plan_trait_yaml)
 
-    assert len(plan.traits) == 1
+    assert len(plan.identify_traits) == 1
 
 
 def test_to_json_top_level_attrs(tracking_plan_yaml, tracking_plan_event_yaml):
@@ -68,7 +68,7 @@ def test_to_json_events(tracking_plan_yaml, tracking_plan_event_yaml):
 
 def test_to_json_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
     plan = YamlTrackingPlan(tracking_plan_yaml)
-    plan.add_trait(tracking_plan_trait_yaml)
+    plan.add_identify_trait(tracking_plan_trait_yaml)
 
     json_plan = plan.to_json()
 
