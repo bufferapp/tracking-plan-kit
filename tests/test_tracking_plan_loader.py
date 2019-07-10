@@ -78,9 +78,6 @@ def test_loader_identify(tmpdir):
   _create_identify_file(tmpdir)
 
   loader = PlanLoader(tmpdir)
-
-  yaml_event_obj = yaml.safe_load(EVENT_FILE)
-  expected = YamlEvent.parse_yaml(yaml_event_obj)
   traits = loader.plan.traits
 
   assert len(traits) == 2
