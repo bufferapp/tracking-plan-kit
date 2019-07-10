@@ -1,5 +1,5 @@
 from tracking_plan.yaml_event import YamlEvent
-from tracking_plan.yaml_event_property import YamlEventProperty
+from tracking_plan.yaml_property import YamlProperty
 
 class YamlTrackingPlan(object):
     def __init__(self, plan_yaml):
@@ -33,7 +33,7 @@ class YamlTrackingPlan(object):
         self._events.append(event)
 
     def add_trait(self, trait_yaml):
-        trait_property = YamlEventProperty(trait_yaml)
+        trait_property = YamlProperty(trait_yaml)
         self._traits.append(trait_property)
 
     def to_json(self):
@@ -57,7 +57,9 @@ class YamlTrackingPlan(object):
                     'traits' : {
                         'properties' : trait_properties
                     }
-                }
+                },
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "type": "object"
             }
 
         return json_obj

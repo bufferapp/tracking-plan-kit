@@ -1,7 +1,7 @@
 import pytest
 import yaml
 from tracking_plan.yaml_event import YamlEvent
-from tracking_plan.yaml_event_property import YamlEventProperty
+from tracking_plan.yaml_property import YamlProperty
 
 @pytest.fixture
 def experiments_yaml_obj():
@@ -42,7 +42,7 @@ def test_parsing_properties(experiments_yaml_obj):
     assert len(event.properties) == 2
     experiment_property = event.properties[0]
 
-    assert type(experiment_property) == YamlEventProperty
+    assert type(experiment_property) == YamlProperty
     assert experiment_property.name == 'experiment'
 
 def test_parsing_tags(tag_created_yaml_obj):
@@ -56,7 +56,7 @@ def test_to_json(experiments_yaml_obj):
   event = YamlEvent.parse_yaml(experiments_yaml_obj)
   event_properties = {}
   for p in experiments_yaml_obj['properties']:
-    event_properties[p['name']] = YamlEventProperty.from_yaml(p).to_json()
+    event_properties[p['name']] = YamlProperty.from_yaml(p).to_json()
 
   expected = {
     'version': 1,

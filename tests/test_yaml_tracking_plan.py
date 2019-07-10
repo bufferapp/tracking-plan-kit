@@ -2,7 +2,7 @@ import pytest
 import yaml
 from tracking_plan.yaml_tracking_plan import YamlTrackingPlan
 from tracking_plan.yaml_event import YamlEvent
-from tracking_plan.yaml_event_property import YamlEventProperty
+from tracking_plan.yaml_property import YamlProperty
 
 
 @pytest.fixture
@@ -75,6 +75,6 @@ def test_to_json_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
     json_traits = json_plan['rules']['identify']['properties']['traits']['properties']
 
     assert len(json_traits) == 1
-    expected = YamlEventProperty(tracking_plan_trait_yaml).to_json()
+    expected = YamlProperty(tracking_plan_trait_yaml).to_json()
     actual = json_traits['email']
     assert actual == expected
