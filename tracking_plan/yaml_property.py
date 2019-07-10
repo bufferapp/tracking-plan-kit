@@ -1,6 +1,6 @@
 from tracking_plan.errors import ValidationError
 
-class YamlEventProperty(object):
+class YamlProperty(object):
     def __init__(self, property_yaml):
         self._property_yaml = property_yaml
         self.validate()
@@ -40,8 +40,7 @@ class YamlEventProperty(object):
 
         output = {
             'description': self.description,
-            'type': p_types,
-            'id': f"/properties/properties/properties/{self.name}"
+            'type': p_types
         }
         if self.pattern:
             output['pattern'] = self.pattern

@@ -8,7 +8,7 @@ import yaml
 
 from inflection import underscore, dasherize, camelize
 
-from tracking_plan.json_utils import parse_json_event
+from tracking_plan.json_utils import parse_json_event, parse_json_property
 
 class JsonTrackingPlan(object):
     def __init__(self, json_obj):
@@ -49,6 +49,14 @@ class JsonTrackingPlan(object):
                 os.makedirs(d)
 
         self._dump_plan_file(root_dir)
+        traits_json = self._json_obj. \
+            get('rules'). \
+            get('identify', {}). \
+            get('properties', {}). \
+            get('traits', {}). \
+            get('properties')
+        if traits_json:
+            self._dump_identify_file(root_dir, traits_json)
 
         # dump the events
         for event_json in self._json_obj.get('rules', {}).get('events', []):
@@ -87,3 +95,15 @@ class JsonTrackingPlan(object):
 
         with open(event_file, 'w') as f:
             yaml.dump(event_obj, f, sort_keys=False)
+
+    def _dump_identify_file(self, root_dir, traits_json):
+        traits = [parse_json_property(name, prop_json)
+            for (name, prop_json) in traits_json.items()]
+
+        traits_obj = {
+            'traits': traits
+        }
+        traits_file = os.path.join(root_dir, 'identify_traits.yaml')
+
+        with open(traits_file, 'w') as f:
+            yaml.dump(traits_obj, f, sort_keys=False)

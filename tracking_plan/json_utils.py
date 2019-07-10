@@ -1,3 +1,20 @@
+def parse_json_property(name, property_json, required=[]):
+    p_types = property_json.get('type')
+    if not isinstance(p_types, (list,)):
+        p_types = [p_types] #sometimes this is not a list, just make it one
+    p = {
+        'name': name,
+        'description': property_json.get('description'),
+        'type': p_types[0]
+    }
+    allow_null = len(p_types) > 1 and p_types[1] == 'null'
+    if allow_null:
+        p['allowNull'] = True
+    if name in required:
+        p['required'] = True
+
+    return p
+
 def parse_json_event(event_json):
     event_labels = event_json.get('rules').get('labels')
     event_area = event_labels.get('area')
@@ -23,19 +40,7 @@ def parse_json_event(event_json):
 
     event_obj_properties = []
     for name, prop in properties.items():
-        p_types = prop.get('type')
-        if not isinstance(p_types, (list,)):
-            p_types = [p_types] #sometimes this is not a list, just make it one
-        p = {
-            'name': name,
-            'description': prop.get('description'),
-            'type': p_types[0]
-        }
-        allow_null = len(p_types) > 1 and p_types[1] == 'null'
-        if allow_null:
-            p['allowNull'] = True
-        if name in required:
-            p['required'] = True
+        p = parse_json_property(name, prop, required)
         event_obj_properties.append(p)
 
     event_obj['properties'] = event_obj_properties

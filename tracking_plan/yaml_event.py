@@ -1,4 +1,4 @@
-from tracking_plan.yaml_event_property import YamlEventProperty
+from tracking_plan.yaml_property import YamlProperty
 
 class YamlEvent(object):
     def __init__(self, event_yaml):
@@ -6,7 +6,7 @@ class YamlEvent(object):
         for attr in ['area', 'description', 'name']:
             setattr(self, f'_{attr}', event_yaml.get(attr))
 
-        self._properties = [YamlEventProperty(p) for p in event_yaml['properties']]
+        self._properties = [YamlProperty(p) for p in event_yaml['properties']]
 
     @property
     def area(self):
