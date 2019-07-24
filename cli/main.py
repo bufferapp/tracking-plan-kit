@@ -29,7 +29,7 @@ def dump_json():
 
 
 @click.command()
-@click.argument('output-dir')
+@click.argument('output-dir', envvar='SEGMENT_TRACKING_PLAN_DIR')
 def dump(output_dir):
     logger.info('Getting latest tracking plan from the Segment api.')
     data = api.get_tracking_plan(WORKSPACE, TRACKING_PLAN_ID)
@@ -42,7 +42,9 @@ def dump(output_dir):
 
 @click.command()
 @click.argument('input-dir')
-def update(input_dir):
+@click.option('--dry-run', is_flag=True
+    , help="Output how the plan will be updated without updating it")
+def update(input_dir, dry_run):
 
     logger.info(f'Loading tracking plan from dir {input_dir}.')
     loader = PlanLoader(Path(input_dir))
@@ -51,7 +53,12 @@ def update(input_dir):
     logger.info('Loaded tracking plan, updating it on the api.')
 
     data = plan.to_json()
-    api.update_tracking_plan(WORKSPACE, TRACKING_PLAN_ID, data)
+    if dry_run:
+        logger.info(f'Updating plan {TRACKING_PLAN_ID} in the workspace {WORKSPACE}')
+        logger.info('The following data will be sent')
+        click.echo(json.dumps(data, indent=4))
+    else:
+        api.update_tracking_plan(WORKSPACE, TRACKING_PLAN_ID, data)
 
     logger.info("Done updating plan.")
 
