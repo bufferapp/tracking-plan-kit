@@ -16,6 +16,8 @@ def tracking_plan_yaml():
 def tracking_plan_event_yaml():
     return yaml.safe_load("""
     name: Test Event
+    description: Test Event
+    area: test
     properties: []
     """)
 

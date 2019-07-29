@@ -2,6 +2,7 @@ import pytest
 import yaml
 from tracking_plan.yaml_event import YamlEvent
 from tracking_plan.yaml_property import YamlProperty
+from tracking_plan.errors import ValidationError
 
 @pytest.fixture
 def experiments_yaml_obj():
@@ -83,3 +84,20 @@ def test_to_json(experiments_yaml_obj):
 
   actual = event.to_json()
   assert expected == actual
+
+def test_required_fields(tag_created_yaml_obj):
+  #helpers
+  def remove_key(yaml_obj, key):
+      yaml_obj.pop(key)
+      return YamlEvent.parse_yaml(yaml_obj)
+
+  def assert_required(yaml_obj, key):
+    import copy
+    yaml_obj = copy.deepcopy(yaml_obj)
+    with pytest.raises(ValidationError) as err_info:
+      remove_key(yaml_obj, key)
+
+
+  assert_required(tag_created_yaml_obj, 'name')
+  assert_required(tag_created_yaml_obj, 'description')
+  assert_required(tag_created_yaml_obj, 'area')
