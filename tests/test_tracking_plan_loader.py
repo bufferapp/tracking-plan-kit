@@ -1,5 +1,6 @@
 import os
 import yaml
+from tests.helpers import assert_raises_validation_error
 
 from tracking_plan.yaml_tracking_plan import YamlTrackingPlan
 from tracking_plan.yaml_event import YamlEvent
@@ -43,9 +44,9 @@ def _create_plan_file(tmpdir):
   p = tmpdir / "plan.yaml"
   p.write(TRACKING_PLAN_FILE)
 
-def _create_events(tmpdir):
+def _create_events(tmpdir, contents=EVENT_FILE):
     e = tmpdir.mkdir('events').mkdir('experiments').join('experiment-enrolled.yaml')
-    e.write(EVENT_FILE)
+    e.write(contents)
 
 def _create_identify_file(tmpdir):
   i = tmpdir / "identify_traits.yaml"
@@ -83,3 +84,25 @@ def test_loader_identify(tmpdir):
   traits = loader.plan.identify_traits
 
   assert len(traits) == 2
+
+def test_loader_validation(tmpdir):
+  _create_plan_file(tmpdir)
+
+  #mess with file to cause validation errors
+  event_yaml = yaml.safe_load(EVENT_FILE)
+  event_yaml.pop('name')
+  _create_events(tmpdir, contents=event_yaml)
+  with assert_raises_validation_error():
+    loader = PlanLoader(tmpdir)
+
+
+def test_loader_collect_validation_errors(tmpdir):
+  _create_plan_file(tmpdir)
+
+  #mess with file to cause validation errors
+  event_yaml = yaml.safe_load(EVENT_FILE)
+  event_yaml.pop('name')
+  _create_events(tmpdir, contents=event_yaml)
+  loader = PlanLoader(tmpdir, raise_validation_errors=False)
+  assert loader.has_validation_errors
+  assert len(loader.validation_errors) == 1
