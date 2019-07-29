@@ -1,5 +1,5 @@
 import pytest
-from tests.helpers import assert_required
+from tests.helpers import assert_required, assert_raises_validation_error
 
 import yaml
 from tracking_plan.yaml_property import YamlProperty
@@ -62,3 +62,9 @@ def test_required_fields(property_yaml_obj):
     assert_required(YamlProperty, property_yaml_obj, 'name')
     assert_required(YamlProperty, property_yaml_obj, 'description')
     assert_required(YamlProperty, property_yaml_obj, 'type')
+
+def test_valid_type(property_yaml_obj):
+    property_yaml_obj['type'] = 'foo'
+    property_yaml_obj.pop('pattern')
+    with assert_raises_validation_error(expected_msg="Type foo is not a valid property type"):
+        YamlProperty(property_yaml_obj)

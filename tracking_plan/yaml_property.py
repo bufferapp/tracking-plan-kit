@@ -57,6 +57,11 @@ class YamlProperty(object):
             if getattr(self, attr) is None:
                 raise ValidationError(f'{attr} is required on properties')
 
+    def _check_if_type_is_valid(self):
+        if self.type not in ['any', 'array', 'object', 'boolean', 'integer', 'number', 'string']:
+            raise ValidationError(f'Type {self.type} is not a valid property type')
+
     def validate(self):
         self._check_if_pattern_is_valid()
         self._check_required()
+        self._check_if_type_is_valid()
