@@ -49,19 +49,21 @@ class YamlProperty(object):
 
     def _check_if_pattern_is_valid(self):
         if self.type != 'string' and self.pattern:
-            message = f'Property {self.name} cannot specify a pattern. It''s of type {self.type}.'
+            if self.type is None:
+                print(self._property_yaml)
+            message = f"Property {self.name} cannot specify a pattern. It's of type {self.type}."
             raise ValidationError(message)
 
     def _check_required(self):
         for attr in ['name', 'description', 'type']:
             if getattr(self, attr) is None:
-                raise ValidationError(f'{attr} is required on properties')
+                raise ValidationError(f'Field {attr} is required on YamlProperty')
 
     def _check_if_type_is_valid(self):
         if self.type not in ['any', 'array', 'object', 'boolean', 'integer', 'number', 'string']:
             raise ValidationError(f'Type {self.type} is not a valid property type')
 
     def validate(self):
-        self._check_if_pattern_is_valid()
         self._check_required()
         self._check_if_type_is_valid()
+        self._check_if_pattern_is_valid()

@@ -11,7 +11,6 @@ def assert_raises_validation_error(expected_msg=None):
         yield
 
     if expected_msg:
-        print(err_info)
         assert expected_msg in str(err_info.value)
     return err_info
 
@@ -21,5 +20,5 @@ def remove_key(constructor, yaml_obj, key):
 
 def assert_required(constructor, yaml_obj, key):
     yaml_obj = copy.deepcopy(yaml_obj)
-    with assert_raises_validation_error():
+    with assert_raises_validation_error(f'Field {key} is required on {constructor.__name__}'):
         remove_key(constructor, yaml_obj, key)

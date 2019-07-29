@@ -52,11 +52,9 @@ def test_to_json(property_yaml_obj):
 
 def test_validate_pattern_on_string_type(property_yaml_obj):
     property_yaml_obj['type'] = 'number'
-    with pytest.raises(ValidationError) as err_info:
-        YamlProperty(property_yaml_obj)
-    expected_msg = f'Property variation cannot specify a pattern'
 
-    assert expected_msg in str(err_info.value)
+    with assert_raises_validation_error(expected_msg=f'Property variation cannot specify a pattern'):
+        YamlProperty(property_yaml_obj)
 
 def test_required_fields(property_yaml_obj):
     assert_required(YamlProperty, property_yaml_obj, 'name')

@@ -4,12 +4,8 @@ from tracking_plan.errors import ValidationError
 class YamlEvent(object):
     def __init__(self, event_yaml):
         self._event_yaml = event_yaml
-        for attr in ['area', 'description', 'name']:
-            if event_yaml.get(attr) is None:
-                raise ValidationError(f'{attr} is required on events')
-            setattr(self, f'_{attr}', event_yaml.get(attr))
-
         self._properties = [YamlProperty(p) for p in event_yaml['properties']]
+        self.validate()
 
     @property
     def area(self):
@@ -55,3 +51,10 @@ class YamlEvent(object):
                 'type': 'object'
             }
         }
+    def _check_required(self):
+        for attr in ['area', 'description', 'name', 'properties']:
+            if getattr(self, attr) is None:
+                raise ValidationError(f'Field {attr} is required on YamlEvent')
+
+    def validate(self):
+        self._check_required()
