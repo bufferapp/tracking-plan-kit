@@ -28,7 +28,7 @@ class YamlEvent(object):
         return self._properties
 
     @classmethod
-    def parse_yaml(cls, yaml_obj):
+    def from_yaml(cls, yaml_obj):
         return cls(yaml_obj)
 
     def to_json(self):

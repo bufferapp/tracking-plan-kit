@@ -1,4 +1,5 @@
 import pytest
+from tests.helpers import assert_required
 import yaml
 from tracking_plan.yaml_event import YamlEvent
 from tracking_plan.yaml_property import YamlProperty
@@ -31,14 +32,14 @@ def tag_created_yaml_obj():
   """)
 
 def test_parsing_top_level_attrs(experiments_yaml_obj):
-    event = YamlEvent.parse_yaml(experiments_yaml_obj)
+    event = YamlEvent.from_yaml(experiments_yaml_obj)
 
     assert event.area == 'experiments'
     assert event.description == 'Track whom has been added to an A/B Test Experiment'
     assert event.name == 'Experiment Enrolled'
 
 def test_parsing_properties(experiments_yaml_obj):
-    event = YamlEvent.parse_yaml(experiments_yaml_obj)
+    event = YamlEvent.from_yaml(experiments_yaml_obj)
 
     assert len(event.properties) == 2
     experiment_property = event.properties[0]
@@ -47,14 +48,14 @@ def test_parsing_properties(experiments_yaml_obj):
     assert experiment_property.name == 'experiment'
 
 def test_parsing_tags(tag_created_yaml_obj):
-    event = YamlEvent.parse_yaml(tag_created_yaml_obj)
+    event = YamlEvent.from_yaml(tag_created_yaml_obj)
     actual = event.to_json()['rules']['labels']
 
     assert actual['area'] == 'product'
     assert actual['product'] == 'reply'
 
 def test_to_json(experiments_yaml_obj):
-  event = YamlEvent.parse_yaml(experiments_yaml_obj)
+  event = YamlEvent.from_yaml(experiments_yaml_obj)
   event_properties = {}
   for p in experiments_yaml_obj['properties']:
     event_properties[p['name']] = YamlProperty.from_yaml(p).to_json()
@@ -86,18 +87,6 @@ def test_to_json(experiments_yaml_obj):
   assert expected == actual
 
 def test_required_fields(tag_created_yaml_obj):
-  #helpers
-  def remove_key(yaml_obj, key):
-      yaml_obj.pop(key)
-      return YamlEvent.parse_yaml(yaml_obj)
-
-  def assert_required(yaml_obj, key):
-    import copy
-    yaml_obj = copy.deepcopy(yaml_obj)
-    with pytest.raises(ValidationError) as err_info:
-      remove_key(yaml_obj, key)
-
-
-  assert_required(tag_created_yaml_obj, 'name')
-  assert_required(tag_created_yaml_obj, 'description')
-  assert_required(tag_created_yaml_obj, 'area')
+  assert_required(YamlEvent, tag_created_yaml_obj, 'name')
+  assert_required(YamlEvent, tag_created_yaml_obj, 'description')
+  assert_required(YamlEvent, tag_created_yaml_obj, 'area')

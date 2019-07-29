@@ -68,7 +68,7 @@ def test_loader_events(tmpdir):
 
     loader = PlanLoader(tmpdir)
     yaml_event_obj = yaml.safe_load(EVENT_FILE)
-    expected = YamlEvent.parse_yaml(yaml_event_obj)
+    expected = YamlEvent.from_yaml(yaml_event_obj)
     events = loader.plan.events
 
     assert len(events) == 1
