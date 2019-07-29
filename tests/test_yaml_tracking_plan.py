@@ -25,6 +25,7 @@ def tracking_plan_event_yaml():
 def tracking_plan_trait_yaml():
     return yaml.safe_load("""
         name: email
+        description: email
         type: string
         """)
 

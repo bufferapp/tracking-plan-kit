@@ -27,11 +27,13 @@ EVENT_FILE = """
 IDENTIFY_FILE = """
 traits:
   - name: email
+    description: email
     type: string
     required: false
     allowNull: true
     pattern: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)
   - name: signupAttributionSource
+    description: signupAttributionSource
     type: string
     required: false
     allowNull: true

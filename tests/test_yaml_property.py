@@ -1,4 +1,6 @@
 import pytest
+from tests.helpers import assert_required
+
 import yaml
 from tracking_plan.yaml_property import YamlProperty
 from tracking_plan.errors import ValidationError
@@ -55,3 +57,8 @@ def test_validate_pattern_on_string_type(property_yaml_obj):
     expected_msg = f'Property variation cannot specify a pattern'
 
     assert expected_msg in str(err_info.value)
+
+def test_required_fields(property_yaml_obj):
+    assert_required(YamlProperty, property_yaml_obj, 'name')
+    assert_required(YamlProperty, property_yaml_obj, 'description')
+    assert_required(YamlProperty, property_yaml_obj, 'type')

@@ -52,5 +52,11 @@ class YamlProperty(object):
             message = f'Property {self.name} cannot specify a pattern. It''s of type {self.type}.'
             raise ValidationError(message)
 
+    def _check_required(self):
+        for attr in ['name', 'description', 'type']:
+            if getattr(self, attr) is None:
+                raise ValidationError(f'{attr} is required on properties')
+
     def validate(self):
         self._check_if_pattern_is_valid()
+        self._check_required()
