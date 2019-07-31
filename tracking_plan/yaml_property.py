@@ -1,4 +1,5 @@
 from tracking_plan.errors import ValidationError
+from tracking_plan.string_utilities import is_camel_case
 
 class YamlProperty(object):
     def __init__(self, property_yaml):
@@ -63,7 +64,12 @@ class YamlProperty(object):
         if self.type not in ['any', 'array', 'object', 'boolean', 'integer', 'number', 'string']:
             raise ValidationError(f'Type {self.type} is not a valid property type')
 
+    def _check_valid_name(self):
+        if not is_camel_case(self.name):
+            raise ValidationError(f'{self.name} is not a valid property name')
+
     def validate(self):
         self._check_required()
         self._check_if_type_is_valid()
         self._check_if_pattern_is_valid()
+        self._check_valid_name()
