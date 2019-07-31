@@ -1,6 +1,8 @@
 from tracking_plan.yaml_event import YamlEvent
 from tracking_plan.yaml_property import YamlProperty
+from tracking_plan.errors import ValidationError
 from tracking_plan.validation import check_required
+from collections import Counter
 
 class YamlTrackingPlan(object):
     def __init__(self, plan_yaml):
@@ -33,6 +35,7 @@ class YamlTrackingPlan(object):
     def add_event(self, event_yaml):
         event = YamlEvent(event_yaml)
         self._events.append(event)
+        self.validate()
 
     def add_identify_trait(self, trait_yaml):
         trait_property = YamlProperty(trait_yaml)
@@ -66,5 +69,14 @@ class YamlTrackingPlan(object):
 
         return json_obj
 
+    def _check_duplicate_events(self):
+        event_names = map(lambda e: e.name, self._events)
+        counts = Counter(event_names)
+        duplicates = {k:v for (k,v) in counts.items() if v > 1}
+        if len(duplicates) > 0:
+            duplicate_names = ', '.join(duplicates.keys())
+            raise ValidationError(f'Duplicate events found. Events: {duplicate_names}')
+
     def validate(self):
         check_required(self, 'name')
+        self._check_duplicate_events()

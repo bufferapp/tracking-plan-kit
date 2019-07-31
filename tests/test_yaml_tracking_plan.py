@@ -85,3 +85,10 @@ def test_to_json_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
 
 def test_required_fields(tracking_plan_yaml):
     assert_required(YamlTrackingPlan, tracking_plan_yaml, 'name')
+
+def test_duplicate_events(tracking_plan_yaml, tracking_plan_event_yaml):
+    plan = YamlTrackingPlan.from_yaml(tracking_plan_yaml)
+    plan.add_event(tracking_plan_event_yaml)
+
+    with assert_raises_validation_error(expected_msg='Duplicate events found. Events: Test Event'):
+        plan.add_event(tracking_plan_event_yaml)
