@@ -16,6 +16,8 @@ def tracking_plan_yaml():
 def tracking_plan_event_yaml():
     return yaml.safe_load("""
     name: Test Event
+    description: Test Event
+    area: test
     properties: []
     """)
 
@@ -23,6 +25,7 @@ def tracking_plan_event_yaml():
 def tracking_plan_trait_yaml():
     return yaml.safe_load("""
         name: email
+        description: email
         type: string
         """)
 
@@ -62,7 +65,7 @@ def test_to_json_events(tracking_plan_yaml, tracking_plan_event_yaml):
 
     assert len(json_plan['rules']['events']) == 1
 
-    expected = YamlEvent.parse_yaml(tracking_plan_event_yaml).to_json()
+    expected = YamlEvent.from_yaml(tracking_plan_event_yaml).to_json()
     actual = json_plan['rules']['events'][0]
     assert actual == expected
 

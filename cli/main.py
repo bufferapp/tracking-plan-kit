@@ -63,9 +63,23 @@ def update(input_dir, dry_run):
     logger.info("Done updating plan.")
 
 
+@click.command()
+@click.argument('input-dir')
+def validate(input_dir):
+    logger.info(f'Validating tracking plan from dir {input_dir}.')
+    loader = PlanLoader(Path(input_dir), raise_validation_errors=False)
+    if loader.has_validation_errors:
+        logger.warn('Plan has validation errors')
+        for error in loader.validation_errors:
+            logger.warn(error)
+
+    logger.info("Done validating plan.")
+
+
 cli.add_command(dump)
 cli.add_command(update)
 cli.add_command(dump_json)
+cli.add_command(validate)
 
 if __name__ == "__main__":
     cli()
