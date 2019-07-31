@@ -3,6 +3,7 @@ import yaml
 from tracking_plan.yaml_tracking_plan import YamlTrackingPlan
 from tracking_plan.yaml_event import YamlEvent
 from tracking_plan.yaml_property import YamlProperty
+from tests.helpers import assert_required, assert_raises_validation_error
 
 
 @pytest.fixture
@@ -81,3 +82,6 @@ def test_to_json_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
     expected = YamlProperty(tracking_plan_trait_yaml).to_json()
     actual = json_traits['email']
     assert actual == expected
+
+def test_required_fields(tracking_plan_yaml):
+    assert_required(YamlTrackingPlan, tracking_plan_yaml, 'name')

@@ -1,11 +1,13 @@
 from tracking_plan.yaml_event import YamlEvent
 from tracking_plan.yaml_property import YamlProperty
+from tracking_plan.errors import ValidationError
 
 class YamlTrackingPlan(object):
     def __init__(self, plan_yaml):
         self._plan_yaml = plan_yaml
         self._events = []
         self._identify_traits = []
+        self.validate()
 
     @classmethod
     def from_yaml(cls, plan_yaml):
@@ -63,3 +65,11 @@ class YamlTrackingPlan(object):
             }
 
         return json_obj
+
+    def _check_required(self):
+        for attr in ['name']:
+            if getattr(self, attr) is None:
+                raise ValidationError(f'Field {attr} is required on YamlTrackingPlan')
+
+    def validate(self):
+        self._check_required()
