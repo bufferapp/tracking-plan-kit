@@ -1,6 +1,6 @@
 from tracking_plan.yaml_event import YamlEvent
 from tracking_plan.yaml_property import YamlProperty
-from tracking_plan.errors import ValidationError
+from tracking_plan.validation import check_required
 
 class YamlTrackingPlan(object):
     def __init__(self, plan_yaml):
@@ -66,10 +66,5 @@ class YamlTrackingPlan(object):
 
         return json_obj
 
-    def _check_required(self):
-        for attr in ['name']:
-            if getattr(self, attr) is None:
-                raise ValidationError(f'Field {attr} is required on YamlTrackingPlan')
-
     def validate(self):
-        self._check_required()
+        check_required(self, 'name')
