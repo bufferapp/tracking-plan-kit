@@ -1,5 +1,6 @@
 from tracking_plan.yaml_property import YamlProperty
 from tracking_plan.errors import ValidationError
+from tracking_plan.string_utilities import is_sentence_case
 
 class YamlEvent(object):
     def __init__(self, event_yaml):
@@ -56,5 +57,10 @@ class YamlEvent(object):
             if getattr(self, attr) is None:
                 raise ValidationError(f'Field {attr} is required on YamlEvent')
 
+    def _check_valid_name(self):
+        if not is_sentence_case(self.name):
+            raise ValidationError(f'{self.name} is not a valid event name')
+
     def validate(self):
         self._check_required()
+        self._check_valid_name()
