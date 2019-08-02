@@ -1,6 +1,6 @@
 import re
-CAMEL_CASE_TEST_RE = re.compile(r'[a-z]+[A-Z0-9][a-z0-9]+[A-Za-z0-9]*|^[a-z0-9]+[a-z0-9]*')
-SENTENCE_CASE_TEST_RE = re.compile(r'^[A-Z]{1}[a-z0-9]*\s([A-Z]{1}[a-z0-9]*\s?)*')
+CAMEL_CASE_TEST_RE = re.compile(r'[a-z]+[A-Za-z0-9]+[A-Za-z0-9]*|^[a-z0-9]+[a-z0-9]*')
+SENTENCE_CASE_TEST_RE = re.compile(r'^[A-Z]+[a-z0-9]*\s([A-Z]+[a-z0-9]*\s?)*')
 
 def is_string(obj):
     """
