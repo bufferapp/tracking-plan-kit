@@ -71,6 +71,8 @@ def validate(input_dir):
         for error in loader.validation_errors:
             click.echo(error, err=True)
 
+            raise click.Abort()
+
 cli.add_command(dump)
 cli.add_command(update)
 cli.add_command(dump_json)
