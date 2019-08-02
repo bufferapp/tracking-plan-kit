@@ -1,5 +1,5 @@
 import pytest
-from tests.helpers import assert_required
+from tests.helpers import assert_required, assert_raises_validation_error
 import yaml
 from tracking_plan.yaml_event import YamlEvent
 from tracking_plan.yaml_property import YamlProperty
@@ -90,3 +90,9 @@ def test_required_fields(tag_created_yaml_obj):
   assert_required(YamlEvent, tag_created_yaml_obj, 'name')
   assert_required(YamlEvent, tag_created_yaml_obj, 'description')
   assert_required(YamlEvent, tag_created_yaml_obj, 'area')
+
+def test_valid_name(tag_created_yaml_obj):
+  tag_created_yaml_obj['name'] = 'Foo bar'
+
+  with assert_raises_validation_error('Foo bar is not a valid event name'):
+    YamlEvent(tag_created_yaml_obj)

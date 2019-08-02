@@ -66,3 +66,9 @@ def test_valid_type(property_yaml_obj):
     property_yaml_obj.pop('pattern')
     with assert_raises_validation_error(expected_msg="Type foo is not a valid property type"):
         YamlProperty(property_yaml_obj)
+
+def test_valid_name(property_yaml_obj):
+    property_yaml_obj['name'] = 'FooBar'
+
+    with assert_raises_validation_error(expected_msg="FooBar is not a valid property name"):
+        YamlProperty(property_yaml_obj)
