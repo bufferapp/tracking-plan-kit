@@ -36,14 +36,13 @@ class YamlProperty(object):
         return cls(property_yaml)
 
     def to_json(self):
-        p_types = [self.type]
-        if self.allow_null:
-            p_types.append('null')
-
         output = {
             'description': self.description,
-            'type': p_types
         }
+        if self.type != 'any':
+            output['type'] = [self.type]
+            if self.allow_null:
+                output['type'].append('null')
         if self.pattern:
             output['pattern'] = self.pattern
 
