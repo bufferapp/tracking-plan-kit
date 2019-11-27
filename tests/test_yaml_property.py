@@ -16,6 +16,14 @@ def property_yaml_obj():
     pattern: "experiment|control"
 """)
 
+@pytest.fixture
+def property_type_any_yaml_obj():
+    return  yaml.safe_load("""
+    name: version
+    description: This could be a string or integer
+    type: any
+""")
+
 def test_parsing_top_level_attrs(property_yaml_obj):
     prop = YamlProperty.from_yaml(property_yaml_obj)
 
@@ -72,3 +80,10 @@ def test_valid_name(property_yaml_obj):
 
     with assert_raises_validation_error(expected_msg="FooBar is not a valid property name"):
         YamlProperty(property_yaml_obj)
+
+def test_type_any_to_json(property_type_any_yaml_obj):
+    prop = YamlProperty.from_yaml(property_type_any_yaml_obj)
+
+    actual = prop.to_json()
+
+    assert 'type' not in actual
