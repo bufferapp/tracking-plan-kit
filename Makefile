@@ -14,5 +14,5 @@ init:
 	@pipenv --three install --dev
 
 .PHONY: test
-test:
-	@pipenv run pytest
+ test:
+	@export PIPENV_VERBOSITY=-1 && pipenv run pytest
