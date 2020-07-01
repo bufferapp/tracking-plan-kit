@@ -9,7 +9,8 @@ class PlanLoader(object):
         try:
             self._load_plan_file(root_dir / "plan.yaml")
             self._load_events(root_dir / "events")
-            self._load_identify_traits(root_dir/ "identify_traits.yaml")
+            self._load_identify_traits(root_dir / "identify_traits.yaml")
+            self._load_group_traits(root_dir / "group_traits.yaml")
         except ValidationError as error:
             if raise_validation_errors:
                 raise error
@@ -34,6 +35,15 @@ class PlanLoader(object):
             yaml_obj = yaml.safe_load(idf)
             for trait in yaml_obj.get('traits', []):
                 self._plan.add_identify_trait(trait)
+
+    def _load_group_traits(self, path):
+        if not path.exists():
+            return
+        with open(path, 'r') as grp:
+            yaml_obj = yaml.safe_load(grp)
+            for trait in yaml_obj.get('traits', []):
+                self._plan.add_group_trait(trait)
+
 
 
     @property
