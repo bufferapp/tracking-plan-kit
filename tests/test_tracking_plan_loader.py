@@ -32,7 +32,7 @@ traits:
     type: string
     required: false
     allowNull: true
-    pattern: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)
+    pattern: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)
   - name: signupAttributionSource
     description: signupAttributionSource
     type: string
