@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    version="0.0.6",
+    version="0.0.7",
     name="tracking-plan-kit",
     packages=["tracking_plan", "cli", "segment"],
     include_package_data=True,
