@@ -89,6 +89,19 @@ def test_to_json_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
     actual = json_traits['email']
     assert actual == expected
 
+def test_to_json_group_traits(tracking_plan_yaml, tracking_plan_trait_yaml):
+    plan = YamlTrackingPlan(tracking_plan_yaml)
+    plan.add_group_trait(tracking_plan_trait_yaml)
+
+    json_plan = plan.to_json()
+
+    json_traits = json_plan['rules']['group']['properties']['traits']['properties']
+
+    assert len(json_traits) == 1
+    expected = YamlProperty(tracking_plan_trait_yaml).to_json()
+    actual = json_traits['email']
+    assert actual == expected
+
 def test_required_fields(tracking_plan_yaml):
     assert_required(YamlTrackingPlan, tracking_plan_yaml, 'name')
 

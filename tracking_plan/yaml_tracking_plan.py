@@ -77,6 +77,18 @@ class YamlTrackingPlan(object):
                 "type": "object"
             }
 
+        if len(self.group_traits) > 0:
+            trait_properties = {t.name: t.to_json() for t in self.group_traits}
+            json_obj['rules']['group'] = {
+                'properties' : {
+                    'traits' : {
+                        'properties' : trait_properties
+                    }
+                },
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "type": "object"
+            }
+
         return json_obj
 
     def _check_duplicate_events(self):
