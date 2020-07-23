@@ -58,6 +58,17 @@ class JsonTrackingPlan(object):
         if traits_json:
             self._dump_identify_file(root_dir, traits_json)
 
+        group_traits_json = self._json_obj. \
+            get('rules'). \
+            get('group', {}). \
+            get('properties', {}). \
+            get('traits', {}). \
+            get('properties')
+
+        if group_traits_json:
+            self._dump_group_file(root_dir, group_traits_json)
+
+
         # dump the events
         for event_json in self._json_obj.get('rules', {}).get('events', []):
             self._dump_event_file(events_dir, event_json)
@@ -104,6 +115,18 @@ class JsonTrackingPlan(object):
             'traits': traits
         }
         traits_file = os.path.join(root_dir, 'identify_traits.yaml')
+
+        with open(traits_file, 'w') as f:
+            yaml.dump(traits_obj, f, sort_keys=False)
+
+    def _dump_group_file(self, root_dir, group_traits_json):
+        traits = [parse_json_property(name, prop_json)
+            for (name, prop_json) in group_traits_json.items()]
+
+        traits_obj = {
+            'traits': traits
+        }
+        traits_file = os.path.join(root_dir, 'group_traits.yaml')
 
         with open(traits_file, 'w') as f:
             yaml.dump(traits_obj, f, sort_keys=False)

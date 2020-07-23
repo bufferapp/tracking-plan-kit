@@ -40,6 +40,14 @@ traits:
     allowNull: true
 """
 
+GROUP_FILE = """
+traits:
+  - name: organizationID
+    description: organizationID
+    type: string
+    required: false
+    allowNull: false
+"""
 def _create_plan_file(tmpdir):
   p = tmpdir / "plan.yaml"
   p.write(TRACKING_PLAN_FILE)
@@ -51,6 +59,10 @@ def _create_events(tmpdir, contents=EVENT_FILE):
 def _create_identify_file(tmpdir):
   i = tmpdir / "identify_traits.yaml"
   i.write(IDENTIFY_FILE)
+
+def _create_group_file(tmpdir):
+  g = tmpdir / "group_traits.yaml"
+  g.write(GROUP_FILE)
 
 def test_loader_tracking_plan(tmpdir):
     _create_plan_file(tmpdir)
@@ -84,6 +96,15 @@ def test_loader_identify(tmpdir):
   traits = loader.plan.identify_traits
 
   assert len(traits) == 2
+
+def test_loader_group(tmpdir):
+  _create_plan_file(tmpdir)
+  _create_group_file(tmpdir)
+
+  loader = PlanLoader(tmpdir)
+  traits = loader.plan.group_traits
+
+  assert len(traits) == 1
 
 def test_loader_validation(tmpdir):
   _create_plan_file(tmpdir)

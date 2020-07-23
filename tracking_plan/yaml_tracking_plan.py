@@ -9,6 +9,7 @@ class YamlTrackingPlan(object):
         self._plan_yaml = plan_yaml
         self._events = []
         self._identify_traits = []
+        self._group_traits = []
         self.validate()
 
     @classmethod
@@ -32,6 +33,11 @@ class YamlTrackingPlan(object):
     def identify_traits(self):
         return self._identify_traits
 
+    @property
+    def group_traits(self):
+        return self._group_traits
+
+
     def add_event(self, event_yaml):
         event = YamlEvent(event_yaml)
         self._events.append(event)
@@ -40,6 +46,10 @@ class YamlTrackingPlan(object):
     def add_identify_trait(self, trait_yaml):
         trait_property = YamlProperty(trait_yaml)
         self._identify_traits.append(trait_property)
+
+    def add_group_trait(self, trait_yaml):
+        trait_property = YamlProperty(trait_yaml)
+        self._group_traits.append(trait_property)
 
     def to_json(self):
         json_obj = {
@@ -58,6 +68,18 @@ class YamlTrackingPlan(object):
         if len(self.identify_traits) > 0:
             trait_properties = {t.name: t.to_json() for t in self.identify_traits}
             json_obj['rules']['identify'] = {
+                'properties' : {
+                    'traits' : {
+                        'properties' : trait_properties
+                    }
+                },
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "type": "object"
+            }
+
+        if len(self.group_traits) > 0:
+            trait_properties = {t.name: t.to_json() for t in self.group_traits}
+            json_obj['rules']['group'] = {
                 'properties' : {
                     'traits' : {
                         'properties' : trait_properties
