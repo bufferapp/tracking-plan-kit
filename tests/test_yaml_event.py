@@ -31,6 +31,22 @@ def tag_created_yaml_obj():
     properties: []
   """)
 
+@pytest.fixture
+def dup_properties_yaml_obj():
+  return yaml.safe_load("""
+  name: Foo Created
+  description: foo
+  area: product
+  properties:
+    - name: foo
+      description: foo
+      type: string
+      required: true
+    - name: foo
+      description: foo
+      type: string
+  """)
+
 def test_parsing_top_level_attrs(experiments_yaml_obj):
     event = YamlEvent.from_yaml(experiments_yaml_obj)
 
@@ -90,6 +106,10 @@ def test_required_fields(tag_created_yaml_obj):
   assert_required(YamlEvent, tag_created_yaml_obj, 'name')
   assert_required(YamlEvent, tag_created_yaml_obj, 'description')
   assert_required(YamlEvent, tag_created_yaml_obj, 'area')
+
+def test_duplicate_properties(dup_properties_yaml_obj):
+  with assert_raises_validation_error(f'Duplicate properties found on event Foo Created. Properties: foo'):
+      YamlEvent.from_yaml(dup_properties_yaml_obj)
 
 def test_valid_name(tag_created_yaml_obj):
   tag_created_yaml_obj['name'] = 'Foo bar'
