@@ -1,0 +1,16 @@
+name: Trial Started
+description: When did the user start the trial for this product and specific plan?
+area: billing
+properties:
+- name: subscriptionId
+  description: Unique identifier for trial/subscription.
+  type: string
+  required: true
+- name: customerId
+  description: Unique identifier for the Stripe customer.
+  type: string
+  required: false
+- name: planName
+  description: Human-readable plan name.
+  type: string
+  required: false

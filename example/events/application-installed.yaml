@@ -1,0 +1,16 @@
+name: Application Installed
+description: When did the user installed the mobile app?
+area: mobile
+properties:
+- name: version
+  description: Which version did the user open?
+  type: string
+  required: true
+- name: build
+  description: What was the build number of the installed app the user installed?
+  type: any
+  required: true
+- name: clientName
+  description: The mobile client the user is on.
+  type: string
+  required: false
