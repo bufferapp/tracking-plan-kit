@@ -1,5 +1,5 @@
 name: Application Installed
-description: When did the user installed the mobile app?
+description: When did the user install the mobile app?
 area: mobile
 properties:
 - name: version
