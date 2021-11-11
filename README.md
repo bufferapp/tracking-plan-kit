@@ -20,6 +20,8 @@ To update a tracking plan from the yaml formatted project:
 
     tracking-plan update <project-dir>
 
+You can find an example project in the `examples` directory.
+
 ## Development
 
 First you need to set up a development env.
